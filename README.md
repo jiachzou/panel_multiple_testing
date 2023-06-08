@@ -26,3 +26,14 @@ panel_unordered
 ```
 
 The simulation code is available upon request.
+
+To cite this code, please use
+
+```
+@article{pelger2022inference,
+  title={Inference for Large Panel Data with Many Covariates},
+  author={Pelger, Markus and Zou, Jiacheng},
+  journal={arXiv preprint arXiv:2301.00292},
+  year={2022}
+}
+```

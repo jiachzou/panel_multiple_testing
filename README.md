@@ -1,14 +1,20 @@
 # Panel Multiple Testing
-R and python software for [panel multiple testing](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=4315891).  
+R and python software for new inference tool in [panel multiple testing](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=4315891).  
 
-New tools for panel inference when different units have different support sets. This is designed for panels where the number of units and the number of features for each unit are large. The inference result is a common feature set with selection false discovery control by Family-Wise Error Rate (FWER) guarantee.
+We conduct inference on panels where the number of units and the number of features for each unit are large. Our novel method method:
+- provides Family-Wise Error Rate (FWER) control
+- allows _arbitrary_ cross-unit covariance
+- allows each unit-level model with arbitrary pattern of missing values, feature selections, etc. so their support sets are varying
 
-Code is in the directory.
-* R/funs.R: Inference for panel hypotheses, implemented 
-* python/funs.py: Inference for LASSO at a fixed, deterministic value of lambda.
+Codes are in the directories:
+* R/funs.R: Inference for panel hypotheses
+* python/funs.py: Inference for panel hypotheses
 
 ## Installation
-There is no need for installation since our code is fully contained in the two scripts respectively for R and python.
+There is no need for installation, other than dependent libraries, since our code is fully contained in the two scripts respectively for R and python.
+
+- R: no dependencies
+- python: pandas, numpy
 
 ## R demo
 Available soon

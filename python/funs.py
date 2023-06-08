@@ -3,7 +3,7 @@ import numpy as np
 
 def panel_unordered(posi_log_pval_matrix):
     '''
-    # Input: a matrix of log p values.
+    # Input: a matrix of log p values. dimension J by N. J: number of features. N: number of units.
     # Output: a pd.DataFrame of sorted multiple testing evidence.
     '''
     if type(posi_log_pval_matrix)!=pd.core.frame.DataFrame:

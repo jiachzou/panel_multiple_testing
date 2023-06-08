@@ -7,7 +7,7 @@ We conduct inference on panels where the number of units and the number of featu
 - allows each unit-level model with arbitrary pattern of missing values, feature selections, etc. so their support sets are varying
 
 Codes are in the directories:
-* R/funs.R: Inference for panel hypotheses
+* R/funs.R: Inference for panel hypotheses (to be available soon)
 * python/funs.py: Inference for panel hypotheses
 
 ## Installation

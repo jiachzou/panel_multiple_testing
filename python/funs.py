@@ -1,33 +1,46 @@
+
+# Created by Jiacheng Zou @ Sept 2, 2022
+# Updated by Jiacheng Zou @ May 11, 2023
+
 import pandas as pd
 import numpy as np
 
-def panel_unordered(posi_log_pval_matrix):
+def panel_unordered(log_pval_matrix):
     '''
-    # Input: a matrix of log p values. dimension J by N. J: number of features. N: number of units.
+    # --------------------------------------------------
+    # Input: a matrix of log p values. dimension J by N.
+    # -- J: number of features. N: number of units.
+    # --------------------------------------------------
     # Output: a pd.DataFrame of sorted multiple testing evidence.
+    # -- rho_inv.N.p_1:     each feature's aggregated p values, adjusted for panel multiplicity
+    # -- rho_inv.N:         each feature's panel multiplicity, adjusted for rho
+    # -- N:                 each feature's panel multiplicity, adjusted for rho
+    # -- p_1:               each feature's smallest p value
+    # -- rho:               panel cohesive coefficient
+    # --------------------------------------------------
     '''
-    if type(posi_log_pval_matrix)!=pd.core.frame.DataFrame:
-        posi_log_pval_matrix= pd.DataFrame(posi_log_pval_matrix)
+    if type(log_pval_matrix)!=pd.core.frame.DataFrame:
+        log_pval_matrix= pd.DataFrame(log_pval_matrix)
 
-    posi_log_pval_matrix = posi_log_pval_matrix.fillna(float('inf'))
+    log_pval_matrix = log_pval_matrix.fillna(float('inf'))
     
-    time_series_Bonf_rejection_table = pd.DataFrame(False, index=posi_log_pval_matrix.index, 
+    result_df = pd.DataFrame(False, index=log_pval_matrix.index, 
                                                     columns=['rho_inv.N.p_1','rho_inv.N','N','p_1'])
 
-    K_set = (posi_log_pval_matrix != float('inf')).sum(axis=1)
-    M_set = (posi_log_pval_matrix != float('inf')).sum(axis=0)
+    K_set = (log_pval_matrix != float('inf')).sum(axis=1)
+    M_set = (log_pval_matrix != float('inf')).sum(axis=0)
     N_vec = []
 
-    for i_row in range(posi_log_pval_matrix.shape[0]):
-        this_pval_row = posi_log_pval_matrix.iloc[i_row,:]
+    for i_row in range(log_pval_matrix.shape[0]):
+        this_pval_row = log_pval_matrix.iloc[i_row,:]
         meaningful_ind = ~(this_pval_row == float('inf'))
         N_vec.append(M_set[meaningful_ind].sum())
     N_vec = np.array(N_vec)
     rho_inv = (K_set[N_vec>0] / N_vec[N_vec>0]).sum()
     rho = 1 / rho_inv
     
-    for i_row in range(posi_log_pval_matrix.shape[0]):
-        this_pval_row = posi_log_pval_matrix.iloc[i_row,:]
+    for i_row in range(log_pval_matrix.shape[0]):
+        this_pval_row = log_pval_matrix.iloc[i_row,:]
         meaningful_ind = ~(this_pval_row == float('inf'))
 
         if meaningful_ind.sum() > 0:
@@ -35,12 +48,12 @@ def panel_unordered(posi_log_pval_matrix):
             p_1 = this_pval_row[meaningful_ind].min()
 
             bonf_level = np.exp(p_1) * my_df * rho_inv
-            time_series_Bonf_rejection_table.iloc[i_row,:] = [bonf_level,my_df*rho_inv,my_df,p_1]
+            result_df.iloc[i_row,:] = [bonf_level,my_df*rho_inv,my_df,p_1]
         else:
-            time_series_Bonf_rejection_table.iloc[i_row,:] = [np.nan,0,0,np.nan]
+            result_df.iloc[i_row,:] = [np.nan,0,0,np.nan]
 
-    time_series_Bonf_rejection_table['p_1'] = np.exp(time_series_Bonf_rejection_table['p_1'].astype(float))
-    time_series_Bonf_rejection_table = time_series_Bonf_rejection_table.sort_values('rho_inv.N.p_1')
-    time_series_Bonf_rejection_table['rho'] = rho
+    result_df['p_1'] = np.exp(result_df['p_1'].astype(float))
+    result_df = result_df.sort_values('rho_inv.N.p_1')
+    result_df['rho'] = rho
 
-    return time_series_Bonf_rejection_table
+    return result_df

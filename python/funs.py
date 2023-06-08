@@ -2,6 +2,10 @@ import pandas as pd
 import numpy as np
 
 def panel_unordered(posi_log_pval_matrix):
+    '''
+    # Input: a matrix of log p values.
+    # Output: a pd.DataFrame of sorted multiple testing evidence.
+    '''
     if type(posi_log_pval_matrix)!=pd.core.frame.DataFrame:
         posi_log_pval_matrix= pd.DataFrame(posi_log_pval_matrix)
 
